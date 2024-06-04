@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Package changed to `space.kscience` 
 
 ### Deprecated
 

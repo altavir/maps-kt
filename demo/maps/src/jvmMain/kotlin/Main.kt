@@ -14,9 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import center.sciprog.maps.compose.*
-import center.sciprog.maps.coordinates.GeodeticMapCoordinates
-import center.sciprog.maps.coordinates.Gmc
-import center.sciprog.maps.coordinates.kilometers
 import center.sciprog.maps.features.*
 import center.sciprog.maps.geojson.geoJson
 import io.ktor.client.HttpClient
@@ -32,6 +29,9 @@ import space.kscience.attributes.Attributes
 import space.kscience.kmath.geometry.Angle
 import space.kscience.kmath.geometry.degrees
 import space.kscience.kmath.geometry.radians
+import space.kscience.maps.coordinates.GeodeticMapCoordinates
+import space.kscience.maps.coordinates.Gmc
+import space.kscience.maps.coordinates.kilometers
 import java.nio.file.Path
 import kotlin.math.PI
 import kotlin.random.Random

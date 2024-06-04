@@ -36,6 +36,7 @@ public class AttributesSerializer(
             override val content: Map<out Attribute<*>, Any?> = attributeMap
             override fun toString(): String = "Attributes(value=${content.entries})"
             override fun equals(other: Any?): Boolean = other is Attributes && Attributes.equals(this, other)
+            override fun hashCode(): Int  = content.hashCode()
         }
     }
 
@@ -69,6 +70,3 @@ public abstract class SerializableAttribute<T>(
 }
 
 public object NameAttribute : SerializableAttribute<String>("name", String.serializer())
-
-public fun Attributes.Companion.equals(a1: Attributes, a2: Attributes): Boolean =
-    a1.keys == a2.keys && a1.keys.all { a1[it] == a2[it] }
