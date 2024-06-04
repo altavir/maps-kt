@@ -52,7 +52,7 @@ public fun <T : Any, F : Feature<T>> FeatureRef<T, F>.modifyAttributes(
     @Suppress("UNCHECKED_CAST")
     parent.feature(
         id,
-        resolve().withAttributes { modify(modification) } as F
+        resolve().withAttributes { modified(modification) } as F
     )
     return this
 }

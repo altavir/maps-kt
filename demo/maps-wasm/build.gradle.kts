@@ -2,7 +2,8 @@ import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose")
+    alias(spclibs.plugins.compose.compiler)
+    alias(spclibs.plugins.compose.jb)
 }
 
 //val ktorVersion: String by rootProject.extra
@@ -14,17 +15,23 @@ kotlin {
         binaries.executable()
     }
     sourceSets {
-        val wasmJsMain by getting {
+        commonMain {
+            dependencies {
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                api(compose.components.resources)
+            }
+        }
+
+        wasmJsMain {
             dependencies {
                 implementation(projects.mapsKtScheme)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) api(compose.components.resources)
             }
         }
     }
 }
 
 compose {
-    experimental.web{
-        application{}
+    web {
+
     }
 }

@@ -6,12 +6,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.*
 import space.kscience.kmath.geometry.radians
 import space.kscience.maps.coordinates.Gmc
 import space.kscience.maps.coordinates.MercatorProjection
 import space.kscience.maps.coordinates.WebMercatorCoordinates
 import space.kscience.maps.coordinates.WebMercatorProjection
+import space.kscience.maps.features.*
 import kotlin.math.*
 
 

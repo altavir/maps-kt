@@ -3,13 +3,12 @@ package space.kscience.maps.compose
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.coordinates.*
-import center.sciprog.maps.features.CoordinateSpace
-import center.sciprog.maps.features.Rectangle
-import center.sciprog.maps.features.ViewPoint
 import space.kscience.kmath.geometry.Angle
 import space.kscience.kmath.geometry.radians
 import space.kscience.maps.coordinates.*
+import space.kscience.maps.features.CoordinateSpace
+import space.kscience.maps.features.Rectangle
+import space.kscience.maps.features.ViewPoint
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.pow

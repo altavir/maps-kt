@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
-import center.sciprog.maps.compose.canvasControls
-import center.sciprog.maps.features.*
 import io.github.oshai.kotlinlogging.KotlinLogging
+import space.kscience.maps.compose.canvasControls
+import space.kscience.maps.features.*
 import kotlin.math.min
 
 

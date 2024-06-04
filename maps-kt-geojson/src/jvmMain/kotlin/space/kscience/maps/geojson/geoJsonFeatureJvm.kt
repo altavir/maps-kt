@@ -1,11 +1,11 @@
 package space.kscience.maps.geojson
 
-import center.sciprog.maps.features.Feature
-import center.sciprog.maps.features.FeatureGroup
-import center.sciprog.maps.features.FeatureRef
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import space.kscience.maps.coordinates.Gmc
+import space.kscience.maps.features.Feature
+import space.kscience.maps.features.FeatureGroup
+import space.kscience.maps.features.FeatureRef
 import java.net.URL
 
 /**

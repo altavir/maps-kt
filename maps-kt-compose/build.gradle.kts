@@ -1,6 +1,7 @@
 plugins {
     id("space.kscience.gradle.mpp")
-    id("org.jetbrains.compose")
+    alias(spclibs.plugins.compose.compiler)
+    alias(spclibs.plugins.compose.jb)
 //    id("com.android.library")
     `maven-publish`
 }
@@ -10,40 +11,22 @@ kscience {
     wasm()
 
     useCoroutines()
-}
 
-kotlin {
-    sourceSets {
-        commonMain {
-            dependencies {
-                api(projects.mapsKtCore)
-                api(projects.mapsKtFeatures)
-                api(compose.foundation)
-                api(project.dependencies.platform(spclibs.ktor.bom))
-            }
-        }
+    commonMain{
+        api(projects.mapsKtCore)
+        api(projects.mapsKtFeatures)
+        api(compose.foundation)
+        api(project.dependencies.platform(spclibs.ktor.bom))
+    }
+    jvmMain{
+        api("io.ktor:ktor-client-cio")
+    }
+    jvmTest{
+        implementation("io.ktor:ktor-client-cio")
+        implementation(compose.desktop.currentOs)
+        implementation(spclibs.kotlinx.coroutines.test)
 
-        getByName("jvmMain"){
-            dependencies {
-                api("io.ktor:ktor-client-cio")
-            }
-        }
-//
-//        getByName("jsMain"){
-//            dependencies {
-//                api("io.ktor:ktor-client-js")
-//            }
-//        }
-
-        getByName("jvmTest") {
-            dependencies {
-                implementation("io.ktor:ktor-client-cio")
-                implementation(compose.desktop.currentOs)
-                implementation(spclibs.kotlinx.coroutines.test)
-
-                implementation(spclibs.logback.classic)
-            }
-        }
+        implementation(spclibs.logback.classic)
     }
 }
 

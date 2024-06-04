@@ -12,7 +12,6 @@ import space.kscience.AttributesSerializer
 import space.kscience.NameAttribute
 import space.kscience.SerializableAttribute
 import space.kscience.attributes.Attributes
-import space.kscience.equals
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals

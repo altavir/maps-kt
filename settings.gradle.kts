@@ -5,8 +5,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
 
     val toolsVersion: String by extra
-    val composeVersion = extra["compose.version"] as String
-    val agpVersion = extra["agp.version"] as String
 
     repositories {
         mavenLocal()
@@ -20,13 +18,9 @@ pluginManagement {
     plugins {
 //        id("com.android.application").version(extra["agp.version"] as String)
 //        id("com.android.library").version(extra["agp.version"] as String)
-        id("org.jetbrains.compose") version composeVersion
         id("space.kscience.gradle.project") version toolsVersion
         id("space.kscience.gradle.mpp") version toolsVersion
         id("space.kscience.gradle.jvm") version toolsVersion
-        id("space.kscience.gradle.js") version toolsVersion
-        id("com.android.application") version agpVersion
-        id("com.android.library") version agpVersion
     }
 }
 

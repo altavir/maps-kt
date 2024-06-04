@@ -2,10 +2,10 @@ package space.kscience.maps.scheme
 
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.CoordinateSpace
-import center.sciprog.maps.features.Rectangle
-import center.sciprog.maps.features.ViewPoint
 import space.kscience.kmath.geometry.Vector2D
+import space.kscience.maps.features.CoordinateSpace
+import space.kscience.maps.features.Rectangle
+import space.kscience.maps.features.ViewPoint
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

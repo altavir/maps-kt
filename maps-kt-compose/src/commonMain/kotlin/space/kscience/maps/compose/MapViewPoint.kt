@@ -1,9 +1,9 @@
 package space.kscience.maps.compose
 
-import center.sciprog.maps.features.ViewPoint
 import space.kscience.maps.coordinates.GeodeticMapCoordinates
 import space.kscience.maps.coordinates.Gmc
 import space.kscience.maps.coordinates.WebMercatorProjection
+import space.kscience.maps.features.ViewPoint
 
 /**
  * Observable position on the map. Includes observation coordinate and [zoom] factor

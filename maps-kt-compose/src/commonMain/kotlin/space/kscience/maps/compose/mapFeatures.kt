@@ -6,11 +6,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.coordinates.*
-import center.sciprog.maps.features.*
 import org.jetbrains.skia.Font
 import space.kscience.kmath.geometry.Angle
 import space.kscience.maps.coordinates.*
+import space.kscience.maps.features.*
 import kotlin.math.ceil
 
 

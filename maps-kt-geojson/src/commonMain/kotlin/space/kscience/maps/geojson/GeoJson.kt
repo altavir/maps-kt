@@ -1,10 +1,10 @@
 package space.kscience.maps.geojson
 
-import center.sciprog.maps.geojson.GeoJson.Companion.PROPERTIES_KEY
-import center.sciprog.maps.geojson.GeoJson.Companion.TYPE_KEY
-import center.sciprog.maps.geojson.GeoJsonFeatureCollection.Companion.FEATURES_KEY
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
+import space.kscience.maps.geojson.GeoJson.Companion.PROPERTIES_KEY
+import space.kscience.maps.geojson.GeoJson.Companion.TYPE_KEY
+import space.kscience.maps.geojson.GeoJsonFeatureCollection.Companion.FEATURES_KEY
 import kotlin.jvm.JvmInline
 
 /**

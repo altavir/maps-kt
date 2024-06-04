@@ -1,10 +1,10 @@
 package space.kscience.maps.compose
 
-import center.sciprog.maps.features.Rectangle
 import space.kscience.kmath.geometry.Angle
 import space.kscience.kmath.geometry.abs
 import space.kscience.maps.coordinates.GeodeticMapCoordinates
 import space.kscience.maps.coordinates.Gmc
+import space.kscience.maps.features.Rectangle
 
 internal fun Angle.isBetween(a: Angle, b: Angle) = this in a..b || this in b..a
 

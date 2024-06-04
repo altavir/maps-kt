@@ -1,9 +1,9 @@
 package space.kscience.maps.geojson
 
-import center.sciprog.maps.geojson.GeoJsonGeometry.Companion.COORDINATES_KEY
 import kotlinx.serialization.json.*
 import space.kscience.maps.coordinates.Gmc
 import space.kscience.maps.coordinates.meters
+import space.kscience.maps.geojson.GeoJsonGeometry.Companion.COORDINATES_KEY
 import kotlin.jvm.JvmInline
 
 public sealed interface GeoJsonGeometry : GeoJson {

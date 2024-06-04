@@ -11,13 +11,13 @@ import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.*
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import org.jetbrains.skia.Image
 import space.kscience.maps.coordinates.Gmc
+import space.kscience.maps.features.*
 import kotlin.math.ceil
 import kotlin.math.pow
 

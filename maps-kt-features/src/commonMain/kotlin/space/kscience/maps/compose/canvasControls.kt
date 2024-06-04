@@ -7,7 +7,7 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.*
+import space.kscience.maps.features.*
 import kotlin.math.max
 import kotlin.math.min
 

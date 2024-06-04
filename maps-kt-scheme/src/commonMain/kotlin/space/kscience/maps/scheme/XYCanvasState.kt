@@ -1,11 +1,12 @@
 package space.kscience.maps.scheme
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.*
+import space.kscience.maps.features.*
 import kotlin.math.min
 
 public class XYCanvasState(

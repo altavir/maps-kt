@@ -12,10 +12,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
-import center.sciprog.maps.features.*
-import center.sciprog.maps.scheme.XY
 import org.jfree.svg.SVGGraphics2D
 import space.kscience.attributes.Attributes
+import space.kscience.maps.features.*
+import space.kscience.maps.scheme.XY
 import java.awt.BasicStroke
 import java.awt.geom.*
 import java.awt.image.AffineTransformOp

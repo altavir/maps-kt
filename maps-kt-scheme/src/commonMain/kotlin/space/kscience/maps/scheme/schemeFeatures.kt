@@ -8,9 +8,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.*
 import space.kscience.attributes.Attributes
 import space.kscience.kmath.geometry.Angle
+import space.kscience.maps.features.*
 import kotlin.math.ceil
 
 internal fun Pair<Number, Number>.toCoordinates(): XY = XY(first.toFloat(), second.toFloat())

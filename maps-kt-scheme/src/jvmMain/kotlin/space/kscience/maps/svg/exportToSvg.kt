@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import center.sciprog.maps.features.*
-import center.sciprog.maps.scheme.XY
-import center.sciprog.maps.scheme.XYCanvasState
 import org.jfree.svg.SVGGraphics2D
 import org.jfree.svg.SVGUtils
+import space.kscience.maps.features.*
+import space.kscience.maps.scheme.XY
+import space.kscience.maps.scheme.XYCanvasState
 
 
 public class FeatureStateSnapshot<T : Any>(

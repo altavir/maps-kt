@@ -4,18 +4,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.CanvasBasedWindow
-import center.sciprog.maps.features.FeatureGroup
-import center.sciprog.maps.features.ViewConfig
-import center.sciprog.maps.features.ViewPoint
-import center.sciprog.maps.features.color
-import center.sciprog.maps.scheme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import space.kscience.kmath.geometry.Angle
+import space.kscience.maps.features.FeatureGroup
+import space.kscience.maps.features.ViewConfig
+import space.kscience.maps.features.ViewPoint
+import space.kscience.maps.features.color
+import space.kscience.maps.scheme.*
+import space.kscience.maps_wasm.generated.resources.Res
+import space.kscience.maps_wasm.generated.resources.middle_earth
 
 
 @Composable
@@ -25,7 +26,9 @@ fun App() {
 
 
     val features: FeatureGroup<XY> = FeatureGroup.remember(XYCoordinateSpace) {
-        background(1600f, 1200f) { painterResource(DrawableResource("middle-earth.jpg")) }
+        background(1600f, 1200f) {
+            painterResource(Res.drawable.middle_earth)
+        }
         circle(410.52737 to 868.7676).color(Color.Blue)
         text(410.52737 to 868.7676, "Shire").color(Color.Blue)
         circle(1132.0881 to 394.99127).color(Color.Red)

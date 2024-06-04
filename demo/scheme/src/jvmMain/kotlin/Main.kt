@@ -8,18 +8,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import center.sciprog.maps.features.FeatureGroup
-import center.sciprog.maps.features.ViewConfig
-import center.sciprog.maps.features.ViewPoint
-import center.sciprog.maps.features.color
-import center.sciprog.maps.scheme.*
-import center.sciprog.maps.svg.FeatureStateSnapshot
-import center.sciprog.maps.svg.exportToSvg
-import center.sciprog.maps.svg.snapshot
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import space.kscience.kmath.geometry.Angle
+import space.kscience.maps.features.FeatureGroup
+import space.kscience.maps.features.ViewConfig
+import space.kscience.maps.features.ViewPoint
+import space.kscience.maps.features.color
+import space.kscience.maps.scheme.*
+import space.kscience.maps.svg.FeatureStateSnapshot
+import space.kscience.maps.svg.exportToSvg
+import space.kscience.maps.svg.snapshot
 import java.awt.Desktop
 import java.nio.file.Files
 

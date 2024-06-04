@@ -20,7 +20,7 @@ public fun <T : Any> FeatureGroup<T>.draggableLine(
                 bId.resolve().center,
                 Attributes<FeatureGroup<T>> {
                     ZAttribute(-10f)
-                    lineId?.attributes?.let { from(it) }
+                    lineId?.attributes?.let { putAll(it) }
                 }
             )
         )
@@ -53,7 +53,7 @@ public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
                 points.map { it.resolve().center },
                 Attributes<FeatureGroup<T>>{
                     ZAttribute(-10f)
-                    polygonId?.attributes?.let { from(it) }
+                    polygonId?.attributes?.let { putAll(it) }
                 }
             )
         )

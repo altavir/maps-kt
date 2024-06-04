@@ -5,9 +5,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import center.sciprog.maps.features.*
-import center.sciprog.maps.scheme.*
-import center.sciprog.maps.scheme.XYCoordinateSpace.Rectangle
+import space.kscience.maps.features.*
+import space.kscience.maps.scheme.*
+import space.kscience.maps.scheme.XYCoordinateSpace.Rectangle
 
 
 fun main() = application {

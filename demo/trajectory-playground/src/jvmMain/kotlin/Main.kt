@@ -8,13 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import center.sciprog.maps.features.*
-import center.sciprog.maps.scheme.SchemeView
-import center.sciprog.maps.scheme.XY
 import space.kscience.kmath.geometry.Angle
 import space.kscience.kmath.geometry.Vector2D
 import space.kscience.kmath.geometry.euclidean2d.Circle2D
 import space.kscience.kmath.geometry.euclidean2d.Float64Space2D
+import space.kscience.maps.features.*
+import space.kscience.maps.scheme.SchemeView
+import space.kscience.maps.scheme.XY
 import space.kscience.trajectory.*
 import kotlin.random.Random
 
