@@ -29,7 +29,8 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
         is CircleFeature -> drawCircle(
             color,
             feature.radius.toPx(),
-            center = feature.center.toOffset()
+            center = feature.center.toOffset(),
+            alpha = alpha
         )
 
         is RectangleFeature -> drawRect(
@@ -38,7 +39,8 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
                 feature.size.width.toPx() / 2,
                 feature.size.height.toPx() / 2
             ),
-            size = feature.size.toSize()
+            size = feature.size.toSize(),
+            alpha = alpha
         )
 
         is LineFeature -> drawLine(
@@ -46,7 +48,8 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
             feature.a.toOffset(),
             feature.b.toOffset(),
             strokeWidth = feature.attributes[StrokeAttribute] ?: Stroke.HairlineWidth,
-            pathEffect = feature.attributes[PathEffectAttribute]
+            pathEffect = feature.attributes[PathEffectAttribute],
+            alpha = alpha
         )
 
         is ArcFeature -> {
@@ -67,14 +70,14 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
 
         }
 
-        is BitmapIconFeature -> drawImage(feature.image, feature.center.toOffset())
+        is BitmapIconFeature -> drawImage(feature.image, feature.center.toOffset(), alpha = alpha)
 
         is VectorIconFeature -> {
             val offset = feature.center.toOffset()
             val size = feature.size.toSize()
             translate(offset.x - size.width / 2, offset.y - size.height / 2) {
                 with(this@drawFeature.painterFor(feature)) {
-                    draw(size, colorFilter = feature.color?.let { ColorFilter.tint(it) })
+                    draw(size, colorFilter = feature.color?.let { ColorFilter.tint(it) }, alpha = alpha)
                 }
             }
         }
@@ -152,7 +155,7 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
 
             translate(offset.x, offset.y) {
                 with(this@drawFeature.painterFor(feature)) {
-                    draw(rect.size)
+                    draw(rect.size, alpha = alpha)
                 }
             }
         }
@@ -175,7 +178,8 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
                                 x = i * xStep,
                                 y = rect.height - j * yStep
                             ),
-                            size = pixelSize
+                            size = pixelSize,
+                            alpha = alpha
                         )
                     }
                 }

@@ -46,6 +46,11 @@ public fun <T : Any, F : Feature<T>> FeatureRef<T, F>.zoomRange(range: FloatRang
 
 public object AlphaAttribute : Attribute<Float>
 
+public fun <T : Any, F : Feature<T>> FeatureRef<T, F>.alpha(alpha: Float): FeatureRef<T, F> {
+    require(alpha in 0f..1f) { "Alpha value must be between 0 and 1" }
+    return modifyAttribute(AlphaAttribute, alpha)
+}
+
 public fun <T : Any, F : Feature<T>> FeatureRef<T, F>.modifyAttributes(
     modification: AttributesBuilder<F>.() -> Unit,
 ): FeatureRef<T, F> {

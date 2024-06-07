@@ -9,7 +9,7 @@ val kmathVersion: String by extra("0.4.0")
 
 allprojects {
     group = "space.kscience"
-    version = "0.3.0"
+    version = "0.3.1-dev"
 
     repositories {
         mavenLocal()

@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- `alpha` extension for feature attribute builder
 
 ### Changed
 
@@ -11,6 +12,7 @@
 ### Removed
 
 ### Fixed
+- Add alpha attribute comprehension for all standard features.
 
 ### Security
 
