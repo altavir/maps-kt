@@ -23,6 +23,8 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
 ): Unit {
     val color = feature.color ?: Color.Red
     val alpha = feature.attributes[AlphaAttribute] ?: 1f
+    //avoid drawing invisible features
+    if(feature.attributes[VisibleAttribute] == false) return
 
     when (feature) {
         is FeatureSelector -> drawFeature(feature.selector(state.zoom))

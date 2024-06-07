@@ -6,6 +6,7 @@
 - `alpha` extension for feature attribute builder
 
 ### Changed
+- avoid drawing features with VisibleAttribute false
 
 ### Deprecated
 
