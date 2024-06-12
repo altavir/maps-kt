@@ -9,11 +9,11 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.input.pointer.isSecondaryPressed
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import center.sciprog.maps.features.*
-import center.sciprog.maps.scheme.SchemeView
-import center.sciprog.maps.scheme.XY
-import center.sciprog.maps.scheme.XYCoordinateSpace
-import center.sciprog.maps.scheme.XYViewScope
+import space.kscience.maps.features.*
+import space.kscience.maps.scheme.SchemeView
+import space.kscience.maps.scheme.XY
+import space.kscience.maps.scheme.XYCanvasState
+import space.kscience.maps.scheme.XYCoordinateSpace
 
 @Composable
 @Preview
@@ -31,7 +31,7 @@ fun App() {
             )
         }
 
-        val mapState: XYViewScope = XYViewScope.remember(
+        val mapState: XYCanvasState = XYCanvasState.remember(
             config = ViewConfig<XY>(
                 onClick = { event, point ->
                     if (event.buttons.isSecondaryPressed) {
