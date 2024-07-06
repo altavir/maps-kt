@@ -17,11 +17,9 @@ public class FeatureStateSnapshot<T : Any>(
 )
 
 @Composable
-public fun <T : Any> FeatureGroup<T>.snapshot(): FeatureStateSnapshot<T> = FeatureStateSnapshot(
-    featureMap,
-    features.flatMap {
-        if (it is FeatureGroup) it.features else listOf(it)
-    }.filterIsInstance<PainterFeature<T>>().associateWith { it.getPainter() }
+public fun <T : Any> FeatureSet<T>.snapshot(): FeatureStateSnapshot<T> = FeatureStateSnapshot(
+    features,
+    features.values.filterIsInstance<PainterFeature<T>>().associateWith { it.getPainter() }
 )
 
 

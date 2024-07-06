@@ -24,7 +24,7 @@ fun App() {
 
         val myPolygon: SnapshotStateList<XY> = remember { mutableStateListOf<XY>() }
 
-        val featureState: FeatureGroup<XY> = FeatureGroup.remember(XYCoordinateSpace) {
+        val featureState = FeatureStore.remember(XYCoordinateSpace) {
             multiLine(
                 listOf(XY(0f, 0f), XY(0f, 1f), XY(1f, 1f), XY(1f, 0f), XY(0f, 0f)),
                 id = "frame"

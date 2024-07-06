@@ -22,7 +22,7 @@ private fun Vector2D<out Number>.toXY() = XY(x.toFloat(), y.toFloat())
 
 private val random = Random(123)
 
-fun FeatureGroup<XY>.trajectory(
+fun FeatureBuilder<XY>.trajectory(
     trajectory: Trajectory2D,
     colorPicker: (Trajectory2D) -> Color = { Color.Blue },
 ): FeatureRef<XY, FeatureGroup<XY>> = group {
@@ -54,12 +54,12 @@ fun FeatureGroup<XY>.trajectory(
     }
 }
 
-fun FeatureGroup<XY>.obstacle(obstacle: Obstacle, colorPicker: (Trajectory2D) -> Color = { Color.Red }) {
+fun FeatureBuilder<XY>.obstacle(obstacle: Obstacle, colorPicker: (Trajectory2D) -> Color = { Color.Red }) {
     trajectory(obstacle.circumvention, colorPicker)
     polygon(obstacle.arcs.map { it.center.toXY() }).color(Color.Gray)
 }
 
-fun FeatureGroup<XY>.pose(pose2D: Pose2D) = with(Float64Space2D) {
+fun FeatureBuilder<XY>.pose(pose2D: Pose2D) = with(Float64Space2D) {
     line(pose2D.toXY(), (pose2D + Pose2D.bearingToVector(pose2D.bearing)).toXY())
 }
 

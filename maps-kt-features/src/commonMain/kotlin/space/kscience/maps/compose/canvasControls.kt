@@ -18,7 +18,7 @@ import kotlin.math.min
  */
 public fun <T : Any> Modifier.canvasControls(
     state: CanvasState<T>,
-    features: FeatureGroup<T>,
+    features: FeatureStore<T>,
 ): Modifier = with(state) {
 
 //    //selecting all tapabales ahead of time
@@ -36,7 +36,7 @@ public fun <T : Any> Modifier.canvasControls(
                 val point = state.space.ViewPoint(coordinates, zoom)
 
                 if (event.type == PointerEventType.Move) {
-                    features.forEachWithAttribute(HoverListenerAttribute) { _, feature, listeners ->
+                    features.forEachWithAttribute(HoverListenerAttribute) { id, feature, listeners ->
                         if (point in feature as DomainFeature) {
                             listeners.forEach { it.handle(event, point) }
                             return@forEachWithAttribute
@@ -67,7 +67,7 @@ public fun <T : Any> Modifier.canvasControls(
                     point
                 )
 
-                features.forEachWithAttributeUntil(ClickListenerAttribute) { _, feature, listeners ->
+                features.forEachWithAttributeUntil(ClickListenerAttribute) {_, feature, listeners ->
                     if (point in (feature as DomainFeature)) {
                         listeners.forEach { it.handle(event, point) }
                         false

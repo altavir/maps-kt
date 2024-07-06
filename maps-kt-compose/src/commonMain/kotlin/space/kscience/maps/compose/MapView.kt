@@ -33,7 +33,7 @@ private val logger = KotlinLogging.logger("MapView")
 public fun MapView(
     mapState: MapCanvasState,
     mapTileProvider: MapTileProvider,
-    features: FeatureGroup<Gmc>,
+    featureStore: FeatureStore<Gmc>,
     modifier: Modifier,
 ) {
     val mapTiles = remember(mapTileProvider) {
@@ -87,7 +87,7 @@ public fun MapView(
     }
 
 
-    FeatureCanvas(mapState, features, modifier = modifier.canvasControls(mapState, features)) {
+    FeatureCanvas(mapState, featureStore.featureFlow, modifier = modifier.canvasControls(mapState, featureStore)) {
         val tileScale = mapState.tileScale
 
         clipRect {
@@ -112,19 +112,19 @@ public fun MapView(
 }
 
 /**
- * Create a [MapView] with given [features] group.
+ * Create a [MapView] with given [featureStore] group.
  */
 @Composable
 public fun MapView(
     mapTileProvider: MapTileProvider,
     config: ViewConfig<Gmc>,
-    features: FeatureGroup<Gmc>,
+    featureStore: FeatureStore<Gmc>,
     initialViewPoint: ViewPoint<Gmc>? = null,
     initialRectangle: Rectangle<Gmc>? = null,
     modifier: Modifier,
 ) {
     val mapState = MapCanvasState.remember(mapTileProvider, config, initialViewPoint, initialRectangle)
-    MapView(mapState, mapTileProvider, features, modifier)
+    MapView(mapState, mapTileProvider, featureStore, modifier)
 }
 
 /**
@@ -141,9 +141,9 @@ public fun MapView(
     initialViewPoint: ViewPoint<Gmc>? = null,
     initialRectangle: Rectangle<Gmc>? = null,
     modifier: Modifier = Modifier.fillMaxSize(),
-    buildFeatures: FeatureGroup<Gmc>.() -> Unit = {},
+    buildFeatures: FeatureStore<Gmc>.() -> Unit = {},
 ) {
-    val featureState = FeatureGroup.remember(WebMercatorSpace, buildFeatures)
+    val featureState = FeatureStore.remember(WebMercatorSpace, buildFeatures)
     val computedRectangle = initialRectangle ?: featureState.getBoundingBox()
     MapView(mapTileProvider, config, featureState, initialViewPoint, computedRectangle, modifier)
 }

@@ -4,7 +4,7 @@ import space.kscience.attributes.Attributes
 import kotlin.jvm.JvmName
 
 
-public fun <T : Any> FeatureGroup<T>.draggableLine(
+public fun <T : Any> FeatureBuilder<T>.draggableLine(
     aId: FeatureRef<T, MarkerFeature<T>>,
     bId: FeatureRef<T, MarkerFeature<T>>,
     id: String? = null,
@@ -39,7 +39,7 @@ public fun <T : Any> FeatureGroup<T>.draggableLine(
     return drawLine()
 }
 
-public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
+public fun <T : Any> FeatureBuilder<T>.draggableMultiLine(
     points: List<FeatureRef<T, MarkerFeature<T>>>,
     id: String? = null,
 ): FeatureRef<T, MultiLineFeature<T>> {
@@ -71,7 +71,7 @@ public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
 }
 
 @JvmName("draggableMultiLineFromPoints")
-public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
+public fun <T : Any> FeatureBuilder<T>.draggableMultiLine(
     points: List<T>,
     id: String? = null,
 ): FeatureRef<T, MultiLineFeature<T>> {

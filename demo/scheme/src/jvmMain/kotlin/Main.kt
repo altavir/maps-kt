@@ -12,7 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import space.kscience.kmath.geometry.Angle
-import space.kscience.maps.features.FeatureGroup
+import space.kscience.maps.features.FeatureStore
 import space.kscience.maps.features.ViewConfig
 import space.kscience.maps.features.ViewPoint
 import space.kscience.maps.features.color
@@ -29,7 +29,7 @@ fun App() {
     MaterialTheme {
         val scope = rememberCoroutineScope()
 
-        val features: FeatureGroup<XY> = FeatureGroup.remember(XYCoordinateSpace) {
+        val features = FeatureStore.remember(XYCoordinateSpace) {
             background(1600f, 1200f) { painterResource("middle-earth.jpg") }
             circle(410.52737 to 868.7676).color(Color.Blue)
             text(410.52737 to 868.7676, "Shire").color(Color.Blue)

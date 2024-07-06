@@ -94,7 +94,7 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
         }
 
         is FeatureGroup -> {
-            feature.featureMap.values.forEach {
+            feature.features.values.forEach {
                 drawFeature(
                     it.withAttributes {
                         feature.attributes + this

@@ -2,6 +2,9 @@ package space.kscience.maps.features
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -16,6 +19,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.DpRect
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.flow.StateFlow
 import space.kscience.attributes.Attributes
 
 /**
@@ -52,6 +56,7 @@ public class ComposeFeatureDrawScope<T : Any>(
 ) : FeatureDrawScope<T>(state), DrawScope by drawScope {
     override fun drawText(text: String, position: Offset, attributes: Attributes) {
         try {
+            //TODO don't draw text that is not on screen
             drawText(textMeasurer ?: error("Text measurer not defined"), text, position)
         } catch (ex: Exception) {
             logger.error(ex) { "Failed to measure text" }
@@ -73,15 +78,19 @@ public class ComposeFeatureDrawScope<T : Any>(
 @Composable
 public fun <T : Any> FeatureCanvas(
     state: CanvasState<T>,
-    features: FeatureGroup<T>,
+    featureFlow: StateFlow<Map<String, Feature<T>>>,
     modifier: Modifier = Modifier,
     draw: FeatureDrawScope<T>.() -> Unit = {},
 ) {
     val textMeasurer = rememberTextMeasurer(0)
 
-    val painterCache: Map<PainterFeature<T>, Painter> = features.features.flatMap {
-        if (it is FeatureGroup) it.features else listOf(it)
-    }.filterIsInstance<PainterFeature<T>>().associateWith { it.getPainter() }
+    val features by featureFlow.collectAsState()
+
+    val painterCache = key(features) {
+        features.values
+            .filterIsInstance<PainterFeature<T>>()
+            .associateWith { it.getPainter() }
+    }
 
     Canvas(modifier) {
         if (state.canvasSize != size.toDpSize()) {
@@ -89,7 +98,7 @@ public fun <T : Any> FeatureCanvas(
         }
         ComposeFeatureDrawScope(this, state, painterCache, textMeasurer).apply(draw).apply {
             clipRect {
-                features.featureMap.values.sortedBy { it.z }
+                features.values.sortedBy { it.z }
                     .filter { state.viewPoint.zoom in it.zoomRange }
                     .forEach { feature ->
                         this@apply.drawFeature(feature)
