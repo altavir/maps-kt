@@ -168,7 +168,7 @@ fun App() {
             //Add click listeners for all polygons
             forEachWithType<Gmc, PolygonFeature<Gmc>> { ref, polygon: PolygonFeature<Gmc> ->
                 ref.onClick(PointerMatcher.Primary) {
-                    println("Click on ${ref.id}")
+                    println("Click on $ref")
                     //draw in top-level scope
                     with(this@MapView) {
                         multiLine(

@@ -6,6 +6,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import org.jfree.svg.SVGGraphics2D
 import org.jfree.svg.SVGUtils
+import space.kscience.attributes.Attributes
+import space.kscience.attributes.plus
 import space.kscience.maps.features.*
 import space.kscience.maps.scheme.XY
 import space.kscience.maps.scheme.XYCanvasState
@@ -160,10 +162,22 @@ public fun FeatureStateSnapshot<XY>.generateSvg(
     val svgScope = SvgDrawScope(svgCanvasState, svgGraphics2D,  painterCache)
 
     svgScope.apply {
-        features.values.sortedBy { it.z }
-            .filter { state.viewPoint.zoom in it.zoomRange }
-            .forEach { feature ->
-                this@apply.drawFeature(feature)
+        features.entries.sortedBy { it.value.z }
+            .filter { state.viewPoint.zoom in it.value.zoomRange }
+            .forEach { (id, feature) ->
+                val attributesCache = mutableMapOf<List<String>, Attributes>()
+
+                fun computeGroupAttributes(path: List<String>): Attributes = attributesCache.getOrPut(path){
+                    if (path.isEmpty()) return Attributes.EMPTY
+                    else if (path.size == 1) {
+                        features[path.first()]?.attributes ?: Attributes.EMPTY
+                    } else {
+                        computeGroupAttributes(path.dropLast(1)) + (features[path.first()]?.attributes ?: Attributes.EMPTY)
+                    }
+                }
+
+                val path = id.split("/")
+                drawFeature(feature, computeGroupAttributes(path.dropLast(1)))
             }
     }
     return svgGraphics2D.getSVGElement(id)

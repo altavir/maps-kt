@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.DpRect
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.StateFlow
 import space.kscience.attributes.Attributes
+import space.kscience.attributes.plus
 
 /**
  * An extension of [DrawScope] to include map-specific features
@@ -96,12 +97,25 @@ public fun <T : Any> FeatureCanvas(
         if (state.canvasSize != size.toDpSize()) {
             state.canvasSize = size.toDpSize()
         }
-        ComposeFeatureDrawScope(this, state, painterCache, textMeasurer).apply(draw).apply {
-            clipRect {
-                features.values.sortedBy { it.z }
-                    .filter { state.viewPoint.zoom in it.zoomRange }
-                    .forEach { feature ->
-                        this@apply.drawFeature(feature)
+        clipRect {
+            ComposeFeatureDrawScope(this, state, painterCache, textMeasurer).apply(draw).apply {
+
+                val attributesCache = mutableMapOf<List<String>, Attributes>()
+
+                fun computeGroupAttributes(path: List<String>): Attributes = attributesCache.getOrPut(path){
+                    if (path.isEmpty()) return Attributes.EMPTY
+                    else if (path.size == 1) {
+                        features[path.first()]?.attributes ?: Attributes.EMPTY
+                    } else {
+                        computeGroupAttributes(path.dropLast(1)) + (features[path.first()]?.attributes ?: Attributes.EMPTY)
+                    }
+                }
+
+                features.entries.sortedBy { it.value.z }
+                    .filter { state.viewPoint.zoom in it.value.zoomRange }
+                    .forEach { (id, feature) ->
+                        val path = id.split("/")
+                        drawFeature(feature, computeGroupAttributes(path.dropLast(1)))
                     }
             }
         }

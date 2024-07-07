@@ -19,16 +19,24 @@ import space.kscience.attributes.Attributes
 import space.kscience.kmath.geometry.Angle
 import space.kscience.kmath.nd.*
 import space.kscience.kmath.structures.Buffer
-import space.kscience.maps.features.FeatureStore.Companion.generateId
+import space.kscience.maps.features.FeatureStore.Companion.generateFeatureId
 
 //@JvmInline
 //public value class FeatureId<out F : Feature<*>>(public val id: String)
 
-public class FeatureRef<T : Any, out F : Feature<T>>(public val store: FeatureStore<T>, public val id: String)
+/**
+ * A reference to a feature inside a [FeatureStore]
+ */
+public class FeatureRef<T : Any, out F : Feature<T>> internal constructor(
+    internal val store: FeatureStore<T>,
+    internal val id: String,
+) {
+    override fun toString(): String = "FeatureRef($id)"
+}
 
 @Suppress("UNCHECKED_CAST")
 public fun <T : Any, F : Feature<T>> FeatureRef<T, F>.resolve(): F =
-    store.features[id]?.let { it as F } ?: error("Feature with id=$id not found")
+    store.features[id]?.let { it as F } ?: error("Feature with ref $this not found")
 
 public val <T : Any, F : Feature<T>> FeatureRef<T, F>.attributes: Attributes get() = resolve().attributes
 
@@ -36,7 +44,16 @@ public fun Uuid.toIndex(): String = leastSignificantBits.toString(16)
 
 public interface FeatureBuilder<T : Any> {
     public val space: CoordinateSpace<T>
+
+    /**
+     * Add or replace feature. If [id] is null, then a unique id is genertated
+     */
     public fun <F : Feature<T>> feature(id: String?, feature: F): FeatureRef<T, F>
+
+    /**
+     * Update existing feature if it is present and is of type [F]
+     */
+    public fun <F : Feature<T>> updateFeature(id: String, block: (F?) -> F): FeatureRef<T, F>
 
     public fun group(
         id: String? = null,
@@ -53,7 +70,7 @@ public interface FeatureSet<T : Any> {
     /**
      * Create a reference
      */
-    public fun <F: Feature<T>> ref(id: String): FeatureRef<T, F>
+    public fun <F : Feature<T>> ref(id: String): FeatureRef<T, F>
 }
 
 
@@ -67,17 +84,21 @@ public class FeatureStore<T : Any>(
     override val features: Map<String, Feature<T>> get() = featureFlow.value
 
     override fun <F : Feature<T>> feature(id: String?, feature: F): FeatureRef<T, F> {
-        val safeId = id ?: generateId(feature)
+        val safeId = id ?: generateFeatureId(feature)
         _featureFlow.value += (safeId to feature)
         return FeatureRef(this, safeId)
     }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <F : Feature<T>> updateFeature(id: String, block: (F?) -> F): FeatureRef<T, F> =
+        feature(id, block(features[id] as? F))
 
     override fun group(
         id: String?,
         attributes: Attributes,
         builder: FeatureGroup<T>.() -> Unit,
     ): FeatureRef<T, FeatureGroup<T>> {
-        val safeId = id ?: generateId(null)
+        val safeId: String = id ?: generateFeatureId<FeatureGroup<*>>()
         return feature(safeId, FeatureGroup(this, safeId, attributes).apply(builder))
     }
 
@@ -85,7 +106,7 @@ public class FeatureStore<T : Any>(
         _featureFlow.value -= id
     }
 
-    override fun <F: Feature<T>> ref(id: String): FeatureRef<T, F> = FeatureRef(this, id)
+    override fun <F : Feature<T>> ref(id: String): FeatureRef<T, F> = FeatureRef(this, id)
 
     public fun getBoundingBox(zoom: Float = Float.MAX_VALUE): Rectangle<T>? = with(space) {
         features.values.mapNotNull { it.getBoundingBox(zoom) }.wrapRectangles()
@@ -93,11 +114,15 @@ public class FeatureStore<T : Any>(
 
 
     public companion object {
-        internal fun generateId(feature: Feature<*>?): String = if (feature == null) {
-            "@group[${uuid4().toIndex()}]"
-        } else {
-            "${feature::class.simpleName}[${uuid4().toIndex()}]"
-        }
+
+        internal fun generateFeatureId(prefix: String): String =
+            "$prefix[${uuid4().toIndex()}]"
+
+        internal fun generateFeatureId(feature: Feature<*>): String =
+            generateFeatureId(feature::class.simpleName ?: "undefined")
+
+        internal inline fun <reified F : Feature<*>> generateFeatureId(): String =
+            generateFeatureId(F::class.simpleName ?: "undefined")
 
         /**
          * Build, but do not remember map feature state
@@ -136,14 +161,18 @@ public data class FeatureGroup<T : Any> internal constructor(
 
 
     override fun <F : Feature<T>> feature(id: String?, feature: F): FeatureRef<T, F> =
-        store.feature("$groupId/${id ?: generateId(feature)}", feature)
+        store.feature("$groupId/${id ?: generateFeatureId(feature)}", feature)
+
+    override fun <F : Feature<T>> updateFeature(id: String, block: (F?) -> F): FeatureRef<T, F> =
+        store.updateFeature("$groupId/$id", block)
+
 
     override fun group(
         id: String?,
         attributes: Attributes,
         builder: FeatureGroup<T>.() -> Unit,
     ): FeatureRef<T, FeatureGroup<T>> {
-        val safeId = id ?: generateId(null)
+        val safeId = id ?: generateFeatureId<FeatureGroup<*>>()
         return feature(safeId, FeatureGroup(store, "$groupId/$safeId", attributes).apply(builder))
     }
 
@@ -161,13 +190,13 @@ public data class FeatureGroup<T : Any> internal constructor(
         features.values.mapNotNull { it.getBoundingBox(zoom) }.wrapRectangles()
     }
 
-    override fun <F: Feature<T>> ref(id: String): FeatureRef<T, F> = FeatureRef(store, "$groupId/$id")
+    override fun <F : Feature<T>> ref(id: String): FeatureRef<T, F> = FeatureRef(store, "$groupId/$id")
 }
 
 /**
  * Recursively search for feature until function returns true
  */
-public fun <T : Any> FeatureSet<T>.forEachUntil(block: FeatureSet<T>.(ref: FeatureRef<T,*>, feature: Feature<T>) -> Boolean) {
+public fun <T : Any> FeatureSet<T>.forEachUntil(block: FeatureSet<T>.(ref: FeatureRef<T, *>, feature: Feature<T>) -> Boolean) {
     features.entries.sortedByDescending { it.value.z }.forEach { (key, feature) ->
         if (!block(ref<Feature<T>>(key), feature)) return@forEachUntil
     }
@@ -178,7 +207,7 @@ public fun <T : Any> FeatureSet<T>.forEachUntil(block: FeatureSet<T>.(ref: Featu
  */
 public inline fun <T : Any, A> FeatureSet<T>.forEachWithAttribute(
     key: Attribute<A>,
-    block: FeatureSet<T>.(ref: FeatureRef<T,*>, feature: Feature<T>, attribute: A) -> Unit,
+    block: FeatureSet<T>.(ref: FeatureRef<T, *>, feature: Feature<T>, attribute: A) -> Unit,
 ) {
     features.forEach { (id, feature) ->
         feature.attributes[key]?.let {
@@ -189,7 +218,7 @@ public inline fun <T : Any, A> FeatureSet<T>.forEachWithAttribute(
 
 public inline fun <T : Any, A> FeatureSet<T>.forEachWithAttributeUntil(
     key: Attribute<A>,
-    block: FeatureSet<T>.(ref: FeatureRef<T,*>, feature: Feature<T>, attribute: A) -> Boolean,
+    block: FeatureSet<T>.(ref: FeatureRef<T, *>, feature: Feature<T>, attribute: A) -> Boolean,
 ) {
     features.forEach { (id, feature) ->
         feature.attributes[key]?.let {
@@ -199,7 +228,7 @@ public inline fun <T : Any, A> FeatureSet<T>.forEachWithAttributeUntil(
 }
 
 public inline fun <T : Any, reified F : Feature<T>> FeatureSet<T>.forEachWithType(
-    crossinline block: FeatureSet<T>.(ref: FeatureRef<T,F>, feature: F) -> Unit,
+    crossinline block: FeatureSet<T>.(ref: FeatureRef<T, F>, feature: F) -> Unit,
 ) {
     features.forEach { (id, feature) ->
         if (feature is F) block(ref(id), feature)

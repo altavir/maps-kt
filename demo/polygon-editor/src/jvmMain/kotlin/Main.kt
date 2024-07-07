@@ -55,6 +55,7 @@ fun App() {
                             }
                             draggableMultiLine(
                                 pointRefs + pointRefs.first(),
+                                "line"
                             )
                         }
                     }
