@@ -11,6 +11,7 @@ import space.kscience.attributes.plus
 import space.kscience.maps.features.*
 import space.kscience.maps.scheme.XY
 import space.kscience.maps.scheme.XYCanvasState
+import space.kscience.maps.utils.GroupAttributesCalculator
 
 
 public class FeatureStateSnapshot<T : Any>(
@@ -165,19 +166,10 @@ public fun FeatureStateSnapshot<XY>.generateSvg(
         features.entries.sortedBy { it.value.z }
             .filter { state.viewPoint.zoom in it.value.zoomRange }
             .forEach { (id, feature) ->
-                val attributesCache = mutableMapOf<List<String>, Attributes>()
-
-                fun computeGroupAttributes(path: List<String>): Attributes = attributesCache.getOrPut(path){
-                    if (path.isEmpty()) return Attributes.EMPTY
-                    else if (path.size == 1) {
-                        features[path.first()]?.attributes ?: Attributes.EMPTY
-                    } else {
-                        computeGroupAttributes(path.dropLast(1)) + (features[path.first()]?.attributes ?: Attributes.EMPTY)
-                    }
-                }
+                val attributesCalculator = GroupAttributesCalculator(features)
 
                 val path = id.split("/")
-                drawFeature(feature, computeGroupAttributes(path.dropLast(1)))
+                drawFeature(feature, attributesCalculator.computeGroupAttributes(path.dropLast(1)))
             }
     }
     return svgGraphics2D.getSVGElement(id)
