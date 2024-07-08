@@ -36,7 +36,7 @@ public fun <T : Any> Modifier.canvasControls(
                 val point = state.space.ViewPoint(coordinates, zoom)
 
                 if (event.type == PointerEventType.Move) {
-                    features.forEachWithAttribute(HoverListenerAttribute) { id, feature, listeners ->
+                    features.forEachWithAttribute(HoverListenerAttribute) { _, feature, listeners ->
                         if (point in feature as DomainFeature) {
                             listeners.forEach { it.handle(event, point) }
                             return@forEachWithAttribute
