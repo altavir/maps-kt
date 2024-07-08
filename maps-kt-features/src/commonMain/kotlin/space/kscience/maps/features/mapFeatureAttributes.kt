@@ -55,7 +55,7 @@ public fun <T : Any, F : Feature<T>> FeatureRef<T, F>.modifyAttributes(
     modification: AttributesBuilder<F>.() -> Unit,
 ): FeatureRef<T, F> {
     @Suppress("UNCHECKED_CAST")
-    parent.feature(
+    store.feature(
         id,
         resolve().withAttributes { modified(modification) } as F
     )
@@ -67,7 +67,7 @@ public fun <T : Any, F : Feature<T>, V> FeatureRef<T, F>.modifyAttribute(
     value: V,
 ): FeatureRef<T, F> {
     @Suppress("UNCHECKED_CAST")
-    parent.feature(id, resolve().withAttributes { withAttribute(key, value) } as F)
+    store.feature(id, resolve().withAttributes { withAttribute(key, value) } as F)
     return this
 }
 
@@ -80,10 +80,10 @@ public fun <T : Any, F : Feature<T>, V> FeatureRef<T, F>.modifyAttribute(
 public fun <T : Any, F : DraggableFeature<T>> FeatureRef<T, F>.draggable(
     constraint: ((T) -> T)? = null,
     listener: (PointerEvent.(from: ViewPoint<T>, to: ViewPoint<T>) -> Unit)? = null,
-): FeatureRef<T, F> = with(parent) {
+): FeatureRef<T, F> = with(store) {
     if (attributes[DraggableAttribute] == null) {
         val handle = DragHandle.withPrimaryButton<Any> { event, start, end ->
-            val feature = featureMap[id] as? DraggableFeature<T> ?: return@withPrimaryButton DragResult(end)
+            val feature = features[id] as? DraggableFeature<T> ?: return@withPrimaryButton DragResult(end)
             start as ViewPoint<T>
             end as ViewPoint<T>
             if (start in feature) {

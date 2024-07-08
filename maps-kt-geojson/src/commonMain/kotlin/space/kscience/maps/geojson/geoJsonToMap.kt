@@ -12,7 +12,7 @@ import space.kscience.maps.features.*
 /**
  * Add a single Json geometry to a feature builder
  */
-public fun FeatureGroup<Gmc>.geoJsonGeometry(
+public fun FeatureBuilder<Gmc>.geoJsonGeometry(
     geometry: GeoJsonGeometry,
     id: String? = null,
 ): FeatureRef<Gmc, Feature<Gmc>> = when (geometry) {
@@ -50,11 +50,11 @@ public fun FeatureGroup<Gmc>.geoJsonGeometry(
     }
 }
 
-public fun FeatureGroup<Gmc>.geoJsonFeature(
+public fun FeatureBuilder<Gmc>.geoJsonFeature(
     geoJson: GeoJsonFeature,
     id: String? = null,
 ): FeatureRef<Gmc, Feature<Gmc>> {
-    val geometry = geoJson.geometry ?: return group {}
+    val geometry = geoJson.geometry ?: return group(null) {}
     val idOverride = id ?: geoJson.getProperty("id")?.jsonPrimitive?.contentOrNull
 
     return geoJsonGeometry(geometry, idOverride).modifyAttributes {
@@ -72,7 +72,7 @@ public fun FeatureGroup<Gmc>.geoJsonFeature(
     }
 }
 
-public fun FeatureGroup<Gmc>.geoJson(
+public fun FeatureBuilder<Gmc>.geoJson(
     geoJson: GeoJson,
     id: String? = null,
 ): FeatureRef<Gmc, Feature<Gmc>> = when (geoJson) {

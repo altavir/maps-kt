@@ -4,28 +4,20 @@ import space.kscience.attributes.Attributes
 import kotlin.jvm.JvmName
 
 
-public fun <T : Any> FeatureGroup<T>.draggableLine(
+public fun <T : Any> FeatureBuilder<T>.draggableLine(
     aId: FeatureRef<T, MarkerFeature<T>>,
     bId: FeatureRef<T, MarkerFeature<T>>,
     id: String? = null,
 ): FeatureRef<T, LineFeature<T>> {
-    var lineId: FeatureRef<T, LineFeature<T>>? = null
+    val lineId = id ?: FeatureStore.generateFeatureId<LineFeature<*>>()
 
-    fun drawLine(): FeatureRef<T, LineFeature<T>> {
-        val currentId = feature(
-            lineId?.id ?: id,
-            LineFeature(
-                space,
-                aId.resolve().center,
-                bId.resolve().center,
-                Attributes<FeatureGroup<T>> {
-                    ZAttribute(-10f)
-                    lineId?.attributes?.let { putAll(it) }
-                }
-            )
+    fun drawLine(): FeatureRef<T, LineFeature<T>> = updateFeature(lineId) { old ->
+        LineFeature(
+            space,
+            aId.resolve().center,
+            bId.resolve().center,
+            old?.attributes ?: Attributes(ZAttribute, -10f)
         )
-        lineId = currentId
-        return currentId
     }
 
     aId.draggable { _, _ ->
@@ -39,26 +31,18 @@ public fun <T : Any> FeatureGroup<T>.draggableLine(
     return drawLine()
 }
 
-public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
+public fun <T : Any> FeatureBuilder<T>.draggableMultiLine(
     points: List<FeatureRef<T, MarkerFeature<T>>>,
     id: String? = null,
 ): FeatureRef<T, MultiLineFeature<T>> {
-    var polygonId: FeatureRef<T, MultiLineFeature<T>>? = null
+    val polygonId = id ?: FeatureStore.generateFeatureId("multiline")
 
-    fun drawLines(): FeatureRef<T, MultiLineFeature<T>> {
-        val currentId = feature(
-            polygonId?.id ?: id,
-            MultiLineFeature(
-                space,
-                points.map { it.resolve().center },
-                Attributes<FeatureGroup<T>>{
-                    ZAttribute(-10f)
-                    polygonId?.attributes?.let { putAll(it) }
-                }
-            )
+    fun drawLines(): FeatureRef<T, MultiLineFeature<T>> = updateFeature(polygonId) { old ->
+        MultiLineFeature(
+            space,
+            points.map { it.resolve().center },
+            old?.attributes ?: Attributes(ZAttribute, -10f)
         )
-        polygonId = currentId
-        return currentId
     }
 
     points.forEach {
@@ -71,7 +55,7 @@ public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
 }
 
 @JvmName("draggableMultiLineFromPoints")
-public fun <T : Any> FeatureGroup<T>.draggableMultiLine(
+public fun <T : Any> FeatureBuilder<T>.draggableMultiLine(
     points: List<T>,
     id: String? = null,
 ): FeatureRef<T, MultiLineFeature<T>> {

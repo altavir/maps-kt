@@ -15,7 +15,7 @@ import kotlin.math.ceil
 
 internal fun Pair<Number, Number>.toCoordinates(): XY = XY(first.toFloat(), second.toFloat())
 
-public fun FeatureGroup<XY>.background(
+public fun FeatureBuilder<XY>.background(
     width: Float,
     height: Float,
     offset: XY = XY(0f, 0f),
@@ -37,26 +37,26 @@ public fun FeatureGroup<XY>.background(
     )
 }
 
-public fun FeatureGroup<XY>.circle(
+public fun FeatureBuilder<XY>.circle(
     centerCoordinates: Pair<Number, Number>,
     size: Dp = 5.dp,
     id: String? = null,
 ): FeatureRef<XY, CircleFeature<XY>> = circle(centerCoordinates.toCoordinates(), size, id = id)
 
-public fun FeatureGroup<XY>.draw(
+public fun FeatureBuilder<XY>.draw(
     position: Pair<Number, Number>,
     id: String? = null,
     draw: DrawScope.() -> Unit,
 ): FeatureRef<XY, DrawFeature<XY>> = draw(position.toCoordinates(), id = id, draw = draw)
 
-public fun FeatureGroup<XY>.line(
+public fun FeatureBuilder<XY>.line(
     aCoordinates: Pair<Number, Number>,
     bCoordinates: Pair<Number, Number>,
     id: String? = null,
 ): FeatureRef<XY, LineFeature<XY>> = line(aCoordinates.toCoordinates(), bCoordinates.toCoordinates(), id = id)
 
 
-public fun FeatureGroup<XY>.arc(
+public fun FeatureBuilder<XY>.arc(
     center: Pair<Double, Double>,
     radius: Float,
     startAngle: Angle,
@@ -69,7 +69,7 @@ public fun FeatureGroup<XY>.arc(
     id = id
 )
 
-public fun FeatureGroup<XY>.image(
+public fun FeatureBuilder<XY>.image(
     position: Pair<Number, Number>,
     image: ImageVector,
     size: DpSize = DpSize(image.defaultWidth, image.defaultHeight),
@@ -77,13 +77,13 @@ public fun FeatureGroup<XY>.image(
 ): FeatureRef<XY, VectorIconFeature<XY>> =
     icon(position.toCoordinates(), image, size = size, id = id)
 
-public fun FeatureGroup<XY>.text(
+public fun FeatureBuilder<XY>.text(
     position: Pair<Number, Number>,
     text: String,
     id: String? = null,
 ): FeatureRef<XY, TextFeature<XY>> = text(position.toCoordinates(), text, id = id)
 
-public fun FeatureGroup<XY>.pixelMap(
+public fun FeatureBuilder<XY>.pixelMap(
     rectangle: Rectangle<XY>,
     xSize: Float,
     ySize: Float,
@@ -108,7 +108,7 @@ public fun FeatureGroup<XY>.pixelMap(
     )
 )
 
-public fun FeatureGroup<XY>.rectanglePolygon(
+public fun FeatureBuilder<XY>.rectanglePolygon(
     left: Number, right: Number,
     bottom: Number, top: Number,
     attributes: Attributes = Attributes.EMPTY,
@@ -123,7 +123,7 @@ public fun FeatureGroup<XY>.rectanglePolygon(
     attributes, id
 )
 
-public fun FeatureGroup<XY>.rectanglePolygon(
+public fun FeatureBuilder<XY>.rectanglePolygon(
     rectangle: Rectangle<XY>,
     attributes: Attributes = Attributes.EMPTY,
     id: String? = null,

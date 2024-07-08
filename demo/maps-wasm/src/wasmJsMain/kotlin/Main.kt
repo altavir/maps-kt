@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
+@file:OptIn(ExperimentalResourceApi::class, ExperimentalComposeUiApi::class)
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import space.kscience.kmath.geometry.Angle
-import space.kscience.maps.features.FeatureGroup
+import space.kscience.maps.features.FeatureStore
 import space.kscience.maps.features.ViewConfig
 import space.kscience.maps.features.ViewPoint
 import space.kscience.maps.features.color
@@ -25,7 +25,7 @@ fun App() {
     val scope = rememberCoroutineScope()
 
 
-    val features: FeatureGroup<XY> = FeatureGroup.remember(XYCoordinateSpace) {
+    val features = FeatureStore.remember(XYCoordinateSpace) {
         background(1600f, 1200f) {
             painterResource(Res.drawable.middle_earth)
         }

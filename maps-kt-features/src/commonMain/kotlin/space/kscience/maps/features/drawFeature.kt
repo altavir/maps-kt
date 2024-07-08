@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
+import space.kscience.attributes.Attributes
 import space.kscience.attributes.plus
 import space.kscience.kmath.PerformancePitfall
 
@@ -20,14 +21,16 @@ import space.kscience.kmath.PerformancePitfall
 
 public fun <T : Any> FeatureDrawScope<T>.drawFeature(
     feature: Feature<T>,
+    baseAttributes: Attributes,
 ): Unit {
-    val color = feature.color ?: Color.Red
-    val alpha = feature.attributes[AlphaAttribute] ?: 1f
+    val attributes = baseAttributes + feature.attributes
+    val color = attributes[ColorAttribute] ?: Color.Red
+    val alpha = attributes[AlphaAttribute] ?: 1f
     //avoid drawing invisible features
-    if(feature.attributes[VisibleAttribute] == false) return
+    if(attributes[VisibleAttribute] == false) return
 
     when (feature) {
-        is FeatureSelector -> drawFeature(feature.selector(state.zoom))
+        is FeatureSelector -> drawFeature(feature.selector(state.zoom), attributes)
         is CircleFeature -> drawCircle(
             color,
             feature.radius.toPx(),
@@ -49,8 +52,8 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
             color,
             feature.a.toOffset(),
             feature.b.toOffset(),
-            strokeWidth = feature.attributes[StrokeAttribute] ?: Stroke.HairlineWidth,
-            pathEffect = feature.attributes[PathEffectAttribute],
+            strokeWidth = attributes[StrokeAttribute] ?: Stroke.HairlineWidth,
+            pathEffect = attributes[PathEffectAttribute],
             alpha = alpha
         )
 
@@ -84,7 +87,7 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
             }
         }
 
-        is TextFeature -> drawText(feature.text, feature.position.toOffset(), feature.attributes)
+        is TextFeature -> drawText(feature.text, feature.position.toOffset(), attributes)
 
         is DrawFeature -> {
             val offset = feature.position.toOffset()
@@ -94,13 +97,7 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
         }
 
         is FeatureGroup -> {
-            feature.featureMap.values.forEach {
-                drawFeature(
-                    it.withAttributes {
-                        feature.attributes + this
-                    }
-                )
-            }
+            //ignore groups
         }
 
         is PathFeature -> {
@@ -117,9 +114,9 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
             drawPoints(
                 points = points,
                 color = color,
-                strokeWidth = feature.attributes[StrokeAttribute] ?: 5f,
+                strokeWidth = attributes[StrokeAttribute] ?: 5f,
                 pointMode = PointMode.Points,
-                pathEffect = feature.attributes[PathEffectAttribute],
+                pathEffect = attributes[PathEffectAttribute],
                 alpha = alpha
             )
         }
@@ -129,9 +126,9 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
             drawPoints(
                 points = points,
                 color = color,
-                strokeWidth = feature.attributes[StrokeAttribute] ?: Stroke.HairlineWidth,
+                strokeWidth = attributes[StrokeAttribute] ?: Stroke.HairlineWidth,
                 pointMode = PointMode.Polygon,
-                pathEffect = feature.attributes[PathEffectAttribute],
+                pathEffect = attributes[PathEffectAttribute],
                 alpha = alpha
             )
         }

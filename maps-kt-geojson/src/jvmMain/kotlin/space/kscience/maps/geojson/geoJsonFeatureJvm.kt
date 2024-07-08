@@ -4,14 +4,14 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import space.kscience.maps.coordinates.Gmc
 import space.kscience.maps.features.Feature
-import space.kscience.maps.features.FeatureGroup
+import space.kscience.maps.features.FeatureBuilder
 import space.kscience.maps.features.FeatureRef
 import java.net.URL
 
 /**
  * Add geojson features from url
  */
-public fun FeatureGroup<Gmc>.geoJson(
+public fun FeatureBuilder<Gmc>.geoJson(
     geoJsonUrl: URL,
     id: String? = null,
 ): FeatureRef<Gmc, Feature<Gmc>> {

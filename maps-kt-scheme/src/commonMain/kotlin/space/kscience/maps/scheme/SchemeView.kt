@@ -15,10 +15,10 @@ private val logger = KotlinLogging.logger("SchemeView")
 @Composable
 public fun SchemeView(
     state: XYCanvasState,
-    features: FeatureGroup<XY>,
+    featureStore: FeatureStore<XY>,
     modifier: Modifier = Modifier.fillMaxSize(),
 ): Unit {
-    FeatureCanvas(state, features, modifier = modifier.canvasControls(state, features))
+    FeatureCanvas(state, featureStore.featureFlow, modifier = modifier.canvasControls(state, featureStore))
 }
 
 
@@ -38,7 +38,7 @@ public fun Rectangle<XY>.computeViewPoint(
  */
 @Composable
 public fun SchemeView(
-    features: FeatureGroup<XY>,
+    features: FeatureStore<XY>,
     initialViewPoint: ViewPoint<XY>? = null,
     initialRectangle: Rectangle<XY>? = null,
     config: ViewConfig<XY> = ViewConfig(),
@@ -67,14 +67,13 @@ public fun SchemeView(
     initialRectangle: Rectangle<XY>? = null,
     config: ViewConfig<XY> = ViewConfig(),
     modifier: Modifier = Modifier.fillMaxSize(),
-    buildFeatures: FeatureGroup<XY>.() -> Unit = {},
+    buildFeatures: FeatureStore<XY>.() -> Unit = {},
 ) {
-    val featureState = FeatureGroup.remember(XYCoordinateSpace, buildFeatures)
+    val featureState = FeatureStore.remember(XYCoordinateSpace, buildFeatures)
     val mapState: XYCanvasState = XYCanvasState.remember(
         config,
         initialViewPoint = initialViewPoint,
-        initialRectangle = initialRectangle ?: featureState.features.computeBoundingBox(
-            XYCoordinateSpace,
+        initialRectangle = initialRectangle ?: featureState.getBoundingBox(
             Float.MAX_VALUE
         ),
     )

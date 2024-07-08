@@ -73,7 +73,7 @@ fun App() {
 
             geoJson(javaClass.getResource("/moscow.geo.json")!!)
                 .color(Color.Blue)
-                .modifyAttribute(AlphaAttribute, 0.4f)
+                .alpha(0.4f)
 
             icon(pointOne, Icons.Filled.Home)
 
@@ -166,13 +166,13 @@ fun App() {
             }.launchIn(scope)
 
             //Add click listeners for all polygons
-            forEachWithType<Gmc, PolygonFeature<Gmc>> { ref ->
+            forEachWithType<Gmc, PolygonFeature<Gmc>> { ref, polygon: PolygonFeature<Gmc> ->
                 ref.onClick(PointerMatcher.Primary) {
-                    println("Click on ${ref.id}")
+                    println("Click on $ref")
                     //draw in top-level scope
                     with(this@MapView) {
                         multiLine(
-                            ref.resolve().points,
+                            polygon.points,
                             attributes = Attributes(ZAttribute, 10f),
                             id = "selected",
                         ).modifyAttribute(StrokeAttribute, 4f).color(Color.Magenta)
