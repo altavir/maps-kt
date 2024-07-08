@@ -4,7 +4,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -19,9 +18,13 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.DpRect
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.sample
 import space.kscience.attributes.Attributes
 import space.kscience.attributes.plus
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * An extension of [DrawScope] to include map-specific features
@@ -76,22 +79,23 @@ public class ComposeFeatureDrawScope<T : Any>(
 /**
  * Create a canvas with extended functionality (e.g., drawing text)
  */
+@OptIn(FlowPreview::class)
 @Composable
 public fun <T : Any> FeatureCanvas(
     state: CanvasState<T>,
     featureFlow: StateFlow<Map<String, Feature<T>>>,
     modifier: Modifier = Modifier,
+    sampleDuration: Duration = 20.milliseconds,
     draw: FeatureDrawScope<T>.() -> Unit = {},
 ) {
     val textMeasurer = rememberTextMeasurer(0)
 
-    val features by featureFlow.collectAsState()
+    val features by featureFlow.sample(sampleDuration).collectAsState(featureFlow.value)
 
-    val painterCache = key(features) {
-        features.values
-            .filterIsInstance<PainterFeature<T>>()
-            .associateWith { it.getPainter() }
-    }
+    val painterCache = features.values
+        .filterIsInstance<PainterFeature<T>>()
+        .associateWith { it.getPainter() }
+
 
     Canvas(modifier) {
         if (state.canvasSize != size.toDpSize()) {
@@ -102,12 +106,13 @@ public fun <T : Any> FeatureCanvas(
 
                 val attributesCache = mutableMapOf<List<String>, Attributes>()
 
-                fun computeGroupAttributes(path: List<String>): Attributes = attributesCache.getOrPut(path){
+                fun computeGroupAttributes(path: List<String>): Attributes = attributesCache.getOrPut(path) {
                     if (path.isEmpty()) return Attributes.EMPTY
                     else if (path.size == 1) {
                         features[path.first()]?.attributes ?: Attributes.EMPTY
                     } else {
-                        computeGroupAttributes(path.dropLast(1)) + (features[path.first()]?.attributes ?: Attributes.EMPTY)
+                        computeGroupAttributes(path.dropLast(1)) + (features[path.first()]?.attributes
+                            ?: Attributes.EMPTY)
                     }
                 }
 

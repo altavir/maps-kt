@@ -46,9 +46,11 @@ public interface FeatureBuilder<T : Any> {
     public val space: CoordinateSpace<T>
 
     /**
-     * Add or replace feature. If [id] is null, then a unique id is genertated
+     * Add or replace feature. If [id] is null, then a unique id is generated
      */
     public fun <F : Feature<T>> feature(id: String?, feature: F): FeatureRef<T, F>
+
+    public fun putFeatures(features: Map<String, Feature<T>?>)
 
     /**
      * Update existing feature if it is present and is of type [F]
@@ -87,6 +89,18 @@ public class FeatureStore<T : Any>(
         val safeId = id ?: generateFeatureId(feature)
         _featureFlow.value += (safeId to feature)
         return FeatureRef(this, safeId)
+    }
+
+    public override fun putFeatures(features: Map<String, Feature<T>?>) {
+        _featureFlow.value = _featureFlow.value.toMutableMap().apply {
+            features.forEach { (key, value) ->
+                if (value == null) {
+                    remove(key)
+                } else {
+                    put(key, value)
+                }
+            }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -159,9 +173,12 @@ public data class FeatureGroup<T : Any> internal constructor(
     override fun withAttributes(modify: Attributes.() -> Attributes): FeatureGroup<T> =
         FeatureGroup(store, groupId, modify(attributes))
 
-
     override fun <F : Feature<T>> feature(id: String?, feature: F): FeatureRef<T, F> =
         store.feature("$groupId/${id ?: generateFeatureId(feature)}", feature)
+
+    public override fun putFeatures(features: Map<String, Feature<T>?>) {
+        store.putFeatures(features.mapKeys { "$groupId/${it.key}" })
+    }
 
     override fun <F : Feature<T>> updateFeature(id: String, block: (F?) -> F): FeatureRef<T, F> =
         store.updateFeature("$groupId/$id", block)

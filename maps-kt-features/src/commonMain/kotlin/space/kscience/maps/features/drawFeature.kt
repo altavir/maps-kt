@@ -98,13 +98,6 @@ public fun <T : Any> FeatureDrawScope<T>.drawFeature(
 
         is FeatureGroup -> {
             //ignore groups
-//            feature.features.values.forEach {
-//                drawFeature(
-//                    it.withAttributes {
-//                        feature.attributes + this
-//                    }
-//                )
-//            }
         }
 
         is PathFeature -> {
